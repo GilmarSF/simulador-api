@@ -61,7 +61,7 @@ public class ClienteController {
 		return ResponseEntity.status(HttpStatus.OK).body(clienteSalvo);
 	}
 	
-	@DeleteMapping("/{id}")
+	@RequestMapping(method=RequestMethod.DELETE, value = "/{id}")	
 	@ResponseStatus(HttpStatus.NO_CONTENT)
 	public void remover(@PathVariable Integer id) {
 

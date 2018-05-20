@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import br.com.banctec.domain.Juros;
 import br.com.banctec.repository.JurosRepository;
-
+/* teste */
 @RestController
 @RequestMapping(value = "/juros")
 public class JurosController {
@@ -43,5 +43,4 @@ public class JurosController {
 		
 		return ResponseEntity.status(HttpStatus.CREATED).body(jurosSalvo);	
 	}
-
 }
