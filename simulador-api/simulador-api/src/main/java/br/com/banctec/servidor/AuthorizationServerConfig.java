@@ -35,7 +35,7 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
                 .secret("bandtec")
                 .authorizedGrantTypes("client_credentials")
                 .scopes("read", "write")
-                .accessTokenValiditySeconds(60)
+                .accessTokenValiditySeconds(600)
                 .resourceIds("simulador-api");
     }
 

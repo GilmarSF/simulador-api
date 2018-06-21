@@ -1,5 +1,9 @@
 package br.com.banctec.service;
 
+import java.util.List;
+
+import javax.persistence.EntityManager;
+
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -29,4 +33,6 @@ public class JurosService {
 		}
 		return jurosSalvo;
 	}
+	
+    
 }

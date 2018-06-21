@@ -16,7 +16,10 @@ public class ConfigEmprestimoService {
 	
 	public ConfigEmprestimo atualizar(Integer id, ConfigEmprestimo configEmprestimo) {
 		ConfigEmprestimo configEmprestimoSalvo = pesquisarConfigEmprestimoCodigo(id);
-		
+
+		if (configEmprestimo.getDataConfiguracao() == null) {
+			configEmprestimo.setDataConfiguracao(configEmprestimoSalvo.getDataConfiguracao());
+		}
         BeanUtils.copyProperties(configEmprestimo, configEmprestimoSalvo, "id");
 
         return configEmprestimoRepository.save(configEmprestimoSalvo);

@@ -1,5 +1,6 @@
 package br.com.banctec.controller;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import javax.servlet.http.HttpServletResponse;
@@ -16,16 +17,22 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import br.com.banctec.domain.Juros;
 import br.com.banctec.domain.Simulador;
 import br.com.banctec.presenters.SimuladorPresenters;
+import br.com.banctec.repository.JurosRepository;
 import br.com.banctec.repository.SimuladorRepository;
 import br.com.banctec.service.SimuladorService;
+
 
 @RestController
 @RequestMapping(value = "/simula")
 public class SimuladorController {
     @Autowired
     SimuladorRepository simuladorRepository;
+    
+    @Autowired
+    JurosRepository jurosRepository;
     
     @Autowired
     SimuladorService simuladorService;
@@ -35,11 +42,24 @@ public class SimuladorController {
 		return simuladorRepository.findAll();
 	}
 	
-	@RequestMapping("/calcular")
-	public ResponseEntity<?> calcular() {
+	@RequestMapping("/calcular/{id}")
+	public ResponseEntity<?> calcular(@PathVariable Integer id) {
 		
-		SimuladorPresenters  resultado = new SimuladorPresenters(1000l, 0.03, 36);
+		SimuladorPresenters  resultado;
+		Simulador simulador = simuladorRepository.findOne(id);	
+		
+		if (simulador  == null) {
+			resultado = null;
+		} else {
+			Juros juros = jurosRepository.jurosAplicado(simulador.getQtdeParcela());
 
+			resultado = new SimuladorPresenters(simulador, 
+                                                juros);
+
+			simuladorService.enviarEmail(resultado, 
+	                                     simulador);            		
+		    
+		}
 	   return resultado  == null ? ResponseEntity.notFound().build() : ResponseEntity.ok(resultado);
 	}
 	
@@ -52,6 +72,11 @@ public class SimuladorController {
 	
 	@RequestMapping(method=RequestMethod.POST) 
 	public ResponseEntity<Simulador> incluirSimulador (@RequestBody Simulador simulador, HttpServletResponse response) {
+		
+		if (simulador.getDataSimulacao() == null) {
+			simulador.setDataSimulacao(LocalDate.now());
+		} 
+		
 		Simulador simuladorSalvo = simuladorRepository.save(simulador);
 		
 		return ResponseEntity.status(HttpStatus.CREATED).body(simuladorSalvo);	

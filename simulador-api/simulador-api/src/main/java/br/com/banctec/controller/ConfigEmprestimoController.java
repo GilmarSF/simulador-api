@@ -1,5 +1,6 @@
 package br.com.banctec.controller;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import javax.servlet.http.HttpServletResponse;
@@ -42,6 +43,11 @@ public class ConfigEmprestimoController {
 	
 	@RequestMapping(method=RequestMethod.POST) 
 	public ResponseEntity<ConfigEmprestimo> incluirConfiguracao (@RequestBody ConfigEmprestimo configEmprestimo, HttpServletResponse response) {
+		
+		if (configEmprestimo.getDataConfiguracao() == null) {
+			configEmprestimo.setDataConfiguracao(LocalDate.now());
+		} 
+		
 		ConfigEmprestimo configSalvo = configEmprestimoRepository.save(configEmprestimo);
 		
 		return ResponseEntity.status(HttpStatus.CREATED).body(configSalvo);	
